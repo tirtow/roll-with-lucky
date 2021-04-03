@@ -7,22 +7,14 @@ class Roller:
     Class to handle rolling
     """
 
-    async def start_roll(self, channel):
+    def __init__(self):
         """
-        Let's start rollin
-
-        channel - the channel the message was sent in
+        Setup the roller
         """
 
         random.seed()
-
-        # Setup an empty list to store the line history
-        self.__lines = []
-
-        # Send the embed
-        self.__msg = await channel.send(embed=self.__get_embed())
-
-        # Now add the reactions for users
+        self.__lines = {}
+        self.__messages = {}
         self.__reactions = [
             "1️⃣",
             "2️⃣",
@@ -31,8 +23,24 @@ class Roller:
             "🔟",
             "⏺"     # Twenty cause there's no 20 /shrug
         ]
+
+    async def start_roll(self, channel):
+        """
+        Let's start rollin
+
+        channel - the channel the message was sent in
+        """
+
+        # Setup an empty list to store the line history
+        self.__lines[channel.id] = []
+
+        # Send the embed
+        self.__messages[channel.id] = await channel.send(
+            embed=self.__get_embed())
+
+        # Now add the reactions for users
         for reaction in self.__reactions:
-            await self.__msg.add_reaction(reaction)
+            await self.__messages[channel.id].add_reaction(reaction)
 
     async def roll(self, payload, user):
         """
@@ -55,7 +63,7 @@ class Roller:
                     user.name, payload.emoji.name, result)
 
                 # And finally update the message
-                await self.__add_description_line(line)
+                await self.__add_description_line(payload.channel_id, line)
 
     def __reaction_for_roll(self, payload):
         """
@@ -67,7 +75,9 @@ class Roller:
         Returns True if we should handle the reaction, false otherwise
         """
 
-        if (self.__msg.id != payload.message_id):
+        if payload.channel_id not in self.__messages:
+            return False
+        if payload.message_id != self.__messages[payload.channel_id].id:
             return False
         return payload.emoji.name in self.__reactions
 
@@ -112,29 +122,30 @@ class Roller:
         # Otherwise just do a normal roll
         return random.randint(1, faces)
 
-    async def __add_description_line(self, line):
+    async def __add_description_line(self, channel_id, line):
         """
         Adds a line to the embed
 
-        line - the line to add
+        channel_id - the ID of the channel to add to
+        line       - the line to add
         """
 
         # Only store the last 20 lines so pop the first (oldest) line if at max
         # then add the new line
-        if len(self.__lines) == 20:
-            self.__lines.pop(0)
-        self.__lines.append(line)
+        if len(self.__lines[channel_id]) == 20:
+            self.__lines[channel_id].pop(0)
+        self.__lines[channel_id].append(line)
 
         # Now convert the list into a string
         description = ""
-        for i in range(0, len(self.__lines)):
+        for i in range(0, len(self.__lines[channel_id])):
             if i > 0:
                 description += "\n"
-            description += str(i + 1) + ". " + self.__lines[i]
+            description += str(i + 1) + ". " + self.__lines[channel_id][i]
 
         # Now we need to build a new embed to add
         embed = self.__get_embed(description)
-        await self.__msg.edit(embed=embed)
+        await self.__messages[channel_id].edit(embed=embed)
 
     def __get_embed(self, description=""):
         """
