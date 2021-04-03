@@ -28,6 +28,35 @@ async def on_message(message):
 
 
 @client.event
+async def on_raw_reaction_add(payload):
+    """
+    Handle when a reaction is added to roll the dice
+
+    payload - the event payload
+    """
+
+    # Don't react to our own reactions
+    if client.user.id != payload.user_id:
+        user = await client.fetch_user(payload.user_id)
+        await roller.roll(payload, user)
+
+
+@client.event
+async def on_raw_reaction_remove(payload):
+    """
+    Treat removes like adds so users can click the reaction multiple times to
+    roll again
+
+    payload - the event payload
+    """
+
+    # Don't have to worry about checking the user since the bot won't remove
+    # reactions
+    user = await client.fetch_user(payload.user_id)
+    await roller.roll(payload, user)
+
+
+@client.event
 async def on_ready():
     """
     Handle when the bot has started
