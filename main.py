@@ -1,6 +1,5 @@
 import os
 import discord
-from dotenv import load_dotenv
 import re
 from roller import Roller
 
@@ -75,6 +74,5 @@ if __name__ == "__main__":
     Startup
     """
 
-    load_dotenv()
     TOKEN = os.getenv("ROLL_WITH_LUCKY_TOKEN")
     client.run(TOKEN)
