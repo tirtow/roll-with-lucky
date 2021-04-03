@@ -13,6 +13,9 @@ roller = Roller()           # The roller
 @client.event
 async def on_message(message):
     """
+    Handle messages to initialize the roller
+
+    message - the message that was sent
     """
 
     # Convert message to lower case and strip whitespace

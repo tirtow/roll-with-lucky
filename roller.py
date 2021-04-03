@@ -3,6 +3,9 @@ import random
 
 
 class Roller:
+    """
+    Class to handle rolling
+    """
 
     async def start_roll(self, channel):
         """
@@ -33,6 +36,10 @@ class Roller:
 
     async def roll(self, payload, user):
         """
+        Roll the dice
+
+        payload - the add/remove event payload
+        user    - the user that rolled
         """
 
         if self.__reaction_for_roll(payload):
@@ -107,6 +114,9 @@ class Roller:
 
     async def __add_description_line(self, line):
         """
+        Adds a line to the embed
+
+        line - the line to add
         """
 
         # Only store the last 20 lines so pop the first (oldest) line if at max
