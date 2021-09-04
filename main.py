@@ -18,8 +18,8 @@ async def on_message(message):
     """
 
     # Convert message to lower case and strip whitespace
-    command = message.content.lower()
-    command = re.sub("\\s+", "", command)
+    msg = message.content.lower()
+    command = re.sub("\\s+", "", msg)
 
     if command == PREFIX + "roll":
         # Main command to start the roller
@@ -27,6 +27,10 @@ async def on_message(message):
     elif command == PREFIX + "ping":
         # Ping command to check if the bot is still alive
         await message.channel.send("Pong!")
+    elif client.user.id != message.author.id and \
+            (msg.startswith("shoutout to") or msg.startswith("shout out to")):
+        # SHOUT OUT TO SHOUTING OUT
+        await message.channel.send(msg.upper())
 
 
 @client.event
