@@ -3,11 +3,32 @@ import discord
 from dotenv import load_dotenv
 import re
 from roller import Roller
+import random
 
 
 PREFIX = "::"               # The prefix used for commands
 client = discord.Client()   # The bot client
 roller = Roller()           # The roller
+boneless = [
+    "b̵͚̙̱̱͈͇̜̪̯̈̅͊́̈́̚͘o̵̟̖̮̞̖̅̚n̷̟͖̮̼̪̆̒̆͜ȩ̶̧̛̫̰͔̼̭̘̟͛̓̍͌ļ̷̞̣͎͊e̴̠̦̙̼̖̥̠͎̿̂̈́͗ͅs̶̭̝͉̺͍͍̹̬̗͊ͅs̸̢̢̙͎̹͔͕͎̭̣̅̅̈́",
+    "ꙅꙅɘ|ɘᴎod",
+    "ⓑⓞⓝⓔⓛⓔⓢⓢ",
+    "ᗷᗝᑎᗴᒪᗴᔕᔕ",
+    "🅱🅾🅽🅴🅻🅴🆂🆂",
+    "БФИΞLΞSS",
+    "𝚋̷𝚘̷𝚗̷𝚎̷𝚕̷𝚎̷𝚜̷𝚜̷",
+    "๒๏ภєɭєรร",
+    "Ⴆσɳҽʅҽʂʂ",
+    "ɮօռɛʟɛֆֆ",
+    "ᏰᎧᏁᏋᏝᏋᏕᏕ",
+    "ცơŋɛƖɛʂʂ",
+    "๖໐ຖēlēŞŞ",
+    "ზσɳҽʅҽʂʂ",
+    "βŐŃĔĹĔŚŚ",
+    "ϦØЛƐŁƐらら",
+    "ƁƠƝЄԼЄƧƧ",
+    "ՅԾՌȝʅȝՏՏ"
+]
 
 
 @client.event
@@ -32,6 +53,10 @@ async def on_message(message):
             (msg.startswith("shoutout to") or msg.startswith("shout out to")):
         # SHOUT OUT TO SHOUTING OUT
         await message.channel.send(msg.upper())
+    elif client.user.id != message.author.id and "pizza" in msg:
+        # It better be boneless
+        index = random.randint(0, len(boneless) - 1)
+        await message.channel.send("That pizza better be " + boneless[index])
 
 
 @client.event
