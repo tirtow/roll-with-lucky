@@ -58,13 +58,13 @@ async def on_message(message):
         # 2 minutes. Will something not work correctly? Probably. Is there a
         # better way to do it? Probably. But what's the worst that can happen?
         now = datetime.now().timestamp()
-        if client.user.id in timeout_zone:
-            timestamp = timeout_zone[client.user.id]
+        if message.author.id in timeout_zone:
+            timestamp = timeout_zone[message.author.id]
             if now - timestamp < 120:
                 return
 
         # SHOUT OUT TO SHOUTING OUT
-        timeout_zone[client.user.id] = now
+        timeout_zone[message.author.id] = now
         await message.channel.send(msg.upper())
     elif client.user.id != message.author.id and "pizza" in msg:
         # It better be boneless
