@@ -3,11 +3,13 @@ import discord
 import re
 from roller import Roller
 import random
+from datetime import datetime
 
 
 PREFIX = "::"               # The prefix used for commands
 client = discord.Client()   # The bot client
 roller = Roller()           # The roller
+timeout_zone = {}           # Bruh chill
 boneless = [
     "b̵͚̙̱̱͈͇̜̪̯̈̅͊́̈́̚͘o̵̟̖̮̞̖̅̚n̷̟͖̮̼̪̆̒̆͜ȩ̶̧̛̫̰͔̼̭̘̟͛̓̍͌ļ̷̞̣͎͊e̴̠̦̙̼̖̥̠͎̿̂̈́͗ͅs̶̭̝͉̺͍͍̹̬̗͊ͅs̸̢̢̙͎̹͔͕͎̭̣̅̅̈́",
     "ꙅꙅɘ|ɘᴎod",
@@ -50,7 +52,18 @@ async def on_message(message):
         await message.channel.send("Pong!")
     elif client.user.id != message.author.id and \
             (msg.startswith("shoutout to") or msg.startswith("shout out to")):
+        # Ok so these dudes need to chill out
+        # This is a really quick and dirty way to limit shouting out to every
+        # 2 minutes. Will something not work correctly? Probably. Is there a
+        # better way to do it? Probably. But what's the worst that can happen?
+        now = datetime.now().timestamp()
+        if client.user.id in timeout_zone:
+            timestamp = timeout_zone[client.user.id]
+            if now - timestamp < 120:
+                return
+
         # SHOUT OUT TO SHOUTING OUT
+        timeout_zone[client.user.id] = now
         await message.channel.send(msg.upper())
     elif client.user.id != message.author.id and "pizza" in msg:
         # It better be boneless
