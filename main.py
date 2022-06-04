@@ -70,6 +70,9 @@ async def on_message(message):
         # It better be boneless
         index = random.randint(0, len(boneless) - 1)
         await message.channel.send("That pizza better be " + boneless[index])
+    elif client.user.id != message.author.id and "boar" in msg:
+        # What can I say they're just the cutest little things
+        await message.channel.send("https://i.imgur.com/jKLKk2f.png")
 
 
 @client.event
