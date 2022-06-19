@@ -51,6 +51,9 @@ async def on_message(message):
     elif command == PREFIX + "ping":
         # Ping command to check if the bot is still alive
         await message.channel.send("Pong!")
+    elif command == PREFIX + "channelinfo":
+        await message.channel.send("Server ID: " + str(message.guild.id))
+        await message.channel.send("Channel ID: " + str(message.channel.id))
     elif client.user.id != message.author.id and \
             (msg.startswith("shoutout to") or msg.startswith("shout out to")):
         # Ok so these dudes need to chill out
@@ -74,6 +77,14 @@ async def on_message(message):
         # Shoutout to Reese
         await message.channel.send("Bank is a perfectly fine map you're " +
                                    "just bad")
+    elif client.user.id != message.author.id and "imgur.com" in msg:
+        # The archives must be complete
+        channel = discord.utils.get(
+            client.get_all_channels(),
+            guild__name=message.guild.name,
+            name="marginally-moments-archives")
+        if channel is not None:
+            await channel.send(message.content)
 
 
 @client.event
